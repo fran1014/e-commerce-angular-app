@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../product.service';
 import { Product } from 'src/app/models/product';
 import { CartService } from 'src/app/cart/cart.service';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-product-list',
@@ -12,7 +13,8 @@ export class ProductListComponent implements OnInit {
 
   products: Product[] = []
 
-  constructor( private productService: ProductService, private cartService : CartService ){}
+  constructor( private productService: ProductService, private cartService : CartService,
+  private snackbar: MatSnackBarModule ){}
 
   ngOnInit(): void {
     this.productService.getProducts().subscribe(data => {
@@ -20,8 +22,12 @@ export class ProductListComponent implements OnInit {
     })
   }
 
-  addTocart (product: Product) : void{
-    this.cartService.addToCart(product).subscribe();
+  addToCart (product: Product) : void{
+    this.cartService.addToCart(product).subscribe({
+      next: () => {
+        this.snackbar.open ("Added to Cart")
+      }
+    });
   }
 
 }
